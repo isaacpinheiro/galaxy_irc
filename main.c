@@ -9,14 +9,15 @@
 
 #define BUFFER_SIZE 1024
 
-int main()
+int main(int argc, char **argv)
 {
 
     int sock;
     struct sockaddr_in server_addr;
     unsigned short server_port = 9000;
-    char server_ip[16] = "127.0.0.1";
+    char server_ip[16];
     char buffer[BUFFER_SIZE];
+    strcat(server_ip, argv[1]);
 
     if ((sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
         perror("socket() failed!");

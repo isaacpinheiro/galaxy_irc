@@ -9,4 +9,4 @@ clean:
 	rm galaxy-irc
 
 run:
-	./galaxy-irc
+	./galaxy-irc 127.0.0.1
