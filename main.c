@@ -36,7 +36,7 @@ int main(int argc, char **argv)
 
     while (1) {
 
-        scanf("%s", buffer);
+        fgets(buffer, 512, stdin);
         send(sock, buffer, sizeof(buffer), 0);
 
         //recv(sock, buffer, sizeof(buffer), 0);
