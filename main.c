@@ -32,14 +32,18 @@ int main(int argc, char **argv)
         exit(-1);
     }
 
+    recv(sock, buffer, sizeof(buffer), 0);
+    printf("%s\n\n", buffer);
+
     while (1) {
 
+        buffer[0] = '\0';
         fgets(buffer, 512, stdin);
         strip(buffer);
         send(sock, buffer, sizeof(buffer), 0);
 
-        //recv(sock, buffer, sizeof(buffer), 0);
-        //printf("%s\n\n", buffer);
+        recv(sock, buffer, sizeof(buffer), 0);
+        printf("%s\n\n", buffer);
 
     }
 
