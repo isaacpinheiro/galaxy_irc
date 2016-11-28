@@ -1,7 +1,7 @@
 #ifndef CLIENT_CMD_H
 #define CLIENT_CMD_H
 
-// TODO
+void strip(char *str);
 
 #endif
 
