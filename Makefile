@@ -2,7 +2,7 @@
 
 build:
 	gcc -c *.c
-	gcc *.o -o galaxy-irc
+	gcc *.o -lpthread -o galaxy-irc
 
 clean:
 	rm *.o
