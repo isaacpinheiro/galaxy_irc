@@ -14,18 +14,13 @@ void strip(char *str)
 void *server_handler(void *server_sock)
 {
 
-}
+    int sock = *(int*)server_sock;
+    int read_size;
+    char buffer[BUFFER_SIZE];
 
-void *client_handler(void *client_sock)
-{
-
-    while (1) {
-
+    while ((read_size = recv(sock, buffer, sizeof(buffer), 0)) > 0) {
+        printf("%s\n\n", buffer);
         buffer[0] = '\0';
-        fgets(buffer, 512, stdin);
-        strip(buffer);
-        send(sock, buffer, sizeof(buffer), 0);
-
     }
 
 }

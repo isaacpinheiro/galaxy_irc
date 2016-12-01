@@ -12,6 +12,7 @@ int main(int argc, char **argv)
 {
 
     int sock;
+    int *new_server_sock;
     struct sockaddr_in server_addr;
     unsigned short server_port = 9000;
     char server_ip[16];
@@ -34,13 +35,11 @@ int main(int argc, char **argv)
     }
 
     pthread_t server_thread;
-    pthread_t client_thread;
 
-    pthread_create(&server_thread, NULL, server_handler, (void*) sock);
-    pthread_create(&client_thread, NULL, client_handler, (void*) sock);
+    new_server_sock = malloc(1);
+    *new_server_sock = sock;
 
-    /*recv(sock, buffer, sizeof(buffer), 0);
-    printf("%s\n\n", buffer);
+    pthread_create(&server_thread, NULL, server_handler, (void*) new_server_sock);
 
     while (1) {
 
@@ -49,10 +48,7 @@ int main(int argc, char **argv)
         strip(buffer);
         send(sock, buffer, sizeof(buffer), 0);
 
-        recv(sock, buffer, sizeof(buffer), 0);
-        printf("%s\n\n", buffer);
-
-    }*/
+    }
 
     close(sock);
 
