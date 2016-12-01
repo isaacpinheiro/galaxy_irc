@@ -5,5 +5,8 @@
 
 void strip(char *str);
 
+void *server_handler(void *server_sock);
+void *client_handler(void *client_sock);
+
 #endif
 

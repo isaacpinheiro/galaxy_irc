@@ -4,6 +4,7 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <pthread.h>
 
 #include "client_cmd.h"
 
@@ -32,7 +33,13 @@ int main(int argc, char **argv)
         exit(-1);
     }
 
-    recv(sock, buffer, sizeof(buffer), 0);
+    pthread_t server_thread;
+    pthread_t client_thread;
+
+    pthread_create(&server_thread, NULL, server_handler, (void*) sock);
+    pthread_create(&client_thread, NULL, client_handler, (void*) sock);
+
+    /*recv(sock, buffer, sizeof(buffer), 0);
     printf("%s\n\n", buffer);
 
     while (1) {
@@ -45,7 +52,7 @@ int main(int argc, char **argv)
         recv(sock, buffer, sizeof(buffer), 0);
         printf("%s\n\n", buffer);
 
-    }
+    }*/
 
     close(sock);
 
