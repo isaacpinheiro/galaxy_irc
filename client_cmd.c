@@ -41,6 +41,11 @@ void strip(char *str)
 
 
 //tentei nao mexer em nada aqui
+
+// Mazim, esta função é utilizada para receber as mensagens do servido TCP.
+// Não precisa mexer nela, todos os dados que são exibidos nela já
+// vêm editados do server.
+
 void *server_handler(void *server_sock)
 {
 
@@ -49,8 +54,8 @@ void *server_handler(void *server_sock)
     char buffer[BUFFER_SIZE];
 
     while ((read_size = recv(sock, buffer, sizeof(buffer), 0)) > 0) {
-        
-        memset(buffer, '\0', 512);
+        printf("%s\n\n", buffer);
+        buffer[0] = '\0';
     }
 
 }
