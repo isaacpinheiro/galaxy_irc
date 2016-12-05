@@ -3,7 +3,7 @@
 
 #define BUFFER_SIZE 1024
 
-typedef struct Message{
+typedef struct Message {
     char user_name[256];
     char command[256];
     char content[512];

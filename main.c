@@ -17,8 +17,7 @@ int main(int argc, char **argv)
     unsigned short server_port = 9000;
     char server_ip[16];
     char buffer[BUFFER_SIZE];
-    char *buff;
-    strcat(server_ip, argv[1]);
+    strcat(server_ip, argv[1]); 
     Message *Me = (Message*) malloc(sizeof(Message));
 
     if ((sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
@@ -43,20 +42,26 @@ int main(int argc, char **argv)
 
     pthread_create(&server_thread, NULL, server_handler, (void*) new_server_sock);
 
+    Me->user_name[0] = '\0';
+    Me->command[0] = '\0';
+    Me->content[0] = '\0';
+
+    printf("Galaxy IRC\n\n");
+
     // inicia aqui pegando um nick
     printf("Escolha um nick: ");
     fgets(buffer, 256, stdin);
     strip(buffer);
     strcat(Me->user_name, buffer);
+    memcpy(Me->command, "new_user", sizeof("new_user"));
+    memcpy(Me->content, buffer, sizeof(buffer));
+    memcpy(buffer, Me, sizeof(Me));
+    send(sock, buffer, sizeof(buffer), 0);
 
     /*
         Mazim, eu fiz esta modificação aqui para enviar para o servidor o nome do novo usuário
         para ser adicionado na lista de usuário. Isto é necessario para a funcionalidade '/list'.
     */
-    strcat(Me->command, "new_user");
-    strcat(Me->content, Me->user_name);
-    buff = (char*) Me;
-    send(sock, buff, sizeof(buff), 0);
     
     while (1) {
 
@@ -91,8 +96,8 @@ int main(int argc, char **argv)
             Obs: depois apague os comentários que eu deixei de resposta.
         */
 
-        buff = (char*) Me;    
-        send(sock, buff, sizeof(buff), 0);
+        memcpy(buffer, Me, sizeof(Me));
+        send(sock, buffer, sizeof(buffer), 0);
 
     }
         
