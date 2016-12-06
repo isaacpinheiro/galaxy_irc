@@ -11,7 +11,7 @@ typedef struct Message {
 
 void strip(char *str);
 void *server_handler(void *server_sock);
-void xxx (char *buffer, Message *Me);
+void xxx(char *buffer, Message *Me);
 
 #endif
 
