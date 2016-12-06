@@ -110,6 +110,9 @@ int main(int argc, char **argv)
             memcpy(buffer, Me->content, sizeof(Me->content));
             send(sock, buffer, sizeof(buffer), 0);
 
+            Me->user_name[0] = '\0';
+            memcpy(Me->user_name, Me->content, sizeof(Me->content));
+
         } else {
 
             buffer[0] = '\0';
