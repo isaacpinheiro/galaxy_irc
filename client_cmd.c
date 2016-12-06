@@ -5,32 +5,33 @@
 
 #include "client_cmd.h"
 
-void xxx (char *buffer, Message *Me) {
+void xxx(char *buffer, Message *Me)
+{
+
     int i = 0;
-     
+    int j = 0;
+
     if (buffer[0] == '/') {
-        buffer++;
-        
-        while (*buffer != ' ') {
-            Me->command[i] = *buffer;
+
+        while (buffer[j] != ' ') {
+            Me->command[i] = buffer[j];
             i++;
-            ++buffer;
+            j++;
         }
-            
+
         i=0;
-        buffer++;
-        while (*buffer != '\0') {
-            Me->content[i] = *buffer;
+        j++;
+
+        while (buffer[j] != '\0') {
+            Me->content[i] = buffer[j];
             i++;
-            ++buffer;
+            j++;
         }
-            
+
     } else {
         strcat(Me->content, buffer);
     }
-    
-    printf("Nome: %s  Comando: %s  Mensagem: %s\n", Me->user_name, Me->command, Me->content);
-        
+
 }
 
 void strip(char *str)
@@ -38,13 +39,6 @@ void strip(char *str)
     int l = strlen(str) - 1;
     if (str[l] == '\n') str[l] = '\0';
 }
-
-
-//tentei nao mexer em nada aqui
-
-// Mazim, esta função é utilizada para receber as mensagens do servido TCP.
-// Não precisa mexer nela, todos os dados que são exibidos nela já
-// vêm editados do server.
 
 void *server_handler(void *server_sock)
 {
@@ -59,6 +53,4 @@ void *server_handler(void *server_sock)
     }
 
 }
-
-
 

@@ -17,7 +17,7 @@ int main(int argc, char **argv)
     unsigned short server_port = 9000;
     char server_ip[16];
     char buffer[BUFFER_SIZE];
-    strcat(server_ip, argv[1]); 
+    strcat(server_ip, argv[1]);
     Message *Me = (Message*) malloc(sizeof(Message));
 
     if ((sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
@@ -47,62 +47,78 @@ int main(int argc, char **argv)
     Me->content[0] = '\0';
 
     printf("Galaxy IRC\n\n");
-
-    // inicia aqui pegando um nick
     printf("Escolha um nick: ");
-    fgets(buffer, 256, stdin);
-    strip(buffer);
-    strcat(Me->user_name, buffer);
-    memcpy(Me->command, "new_user", sizeof("new_user"));
-    memcpy(Me->content, buffer, sizeof(buffer));
-    memcpy(buffer, Me, sizeof(Me));
+
+    buffer[0] = '\0';
+    memcpy(buffer, "/new_user", sizeof(buffer));
     send(sock, buffer, sizeof(buffer), 0);
 
-    /*
-        Mazim, eu fiz esta modificação aqui para enviar para o servidor o nome do novo usuário
-        para ser adicionado na lista de usuário. Isto é necessario para a funcionalidade '/list'.
-    */
+    buffer[0] = '\0';
+    fgets(buffer, 256, stdin);
+    strip(buffer);
+    memcpy(Me->user_name, buffer, sizeof(buffer));
+    send(sock, buffer, sizeof(buffer), 0);
+
+    printf("\n");
     
     while (1) {
 
         buffer[0] = '\0';
-        Me->content[0] = '\0';
         Me->command[0] = '\0';
-
-        /*
-            Mazim, não precisa usar o 'memset' para zerar todo o buffer e as outras strings.
-            Basta zerar o primeiro caracter que as funções de '<string.h>' desconsidera o resto.
-
-            Ex: buffer[0] = '\0';
-
-            O 'memset' é uma operação mais custosa do que zerar o primeiro caracter diretamente.
-        */
-
-        //memset(Me->content, '\0', 512);
-        //memset(Me->command, '\0', 256);
-        
+        Me->content[0] = '\0';
         fgets(buffer, 512, stdin);
         strip(buffer);
         xxx(buffer, Me);
-        
-        // nisso eu nao mexi nada, nao entendi bem como funcionava esse send e o recv
 
-        /*
-            Mazim, as funções 'send' e 'recv' são para enviar e receber mensagems do servidor
-            TCP. A função 'recv' está sendo utilizada pela 'server_thread' na função 'server_handler'
-            no arquivo 'client_cmd.c'. Esta função está sendo executada em uma thread separa porque
-            ela não pode ser bloqueado pelas operações da função 'send'. Não altere a função 'server_handler'.
+        if (strcmp(Me->command, "/list") == 0) {
 
-            Obs: depois apague os comentários que eu deixei de resposta.
-        */
+            buffer[0] = '\0';
+            memcpy(buffer, Me->command, sizeof(Me->command));
+            send(sock, buffer, sizeof(buffer), 0);
 
-        memcpy(buffer, Me, sizeof(Me));
-        send(sock, buffer, sizeof(buffer), 0);
+        } else if (strcmp(Me->command, "/quit") == 0) {
+
+            buffer[0] = '\0';
+            memcpy(buffer, Me->command, sizeof(Me->command));
+            send(sock, buffer, sizeof(buffer), 0);
+
+            buffer[0] = '\0';
+            memcpy(buffer, Me->user_name, sizeof(Me->user_name));
+            send(sock, buffer, sizeof(buffer), 0);
+
+        } else if (strcmp(Me->command, "/kill") == 0) {
+
+            buffer[0] = '\0';
+            memcpy(buffer, Me->command, sizeof(Me->command));
+            send(sock, buffer, sizeof(buffer), 0);
+
+            buffer[0] = '\0';
+            memcpy(buffer, Me->content, sizeof(Me->content));
+            send(sock, buffer, sizeof(buffer), 0);
+
+        } else if (strcmp(Me->command, "/nick") == 0) {
+
+            buffer[0] = '\0';
+            memcpy(buffer, Me->command, sizeof(Me->command));
+            send(sock, buffer, sizeof(buffer), 0);
+
+            buffer[0] = '\0';
+            memcpy(buffer, Me->user_name, sizeof(Me->user_name));
+            send(sock, buffer, sizeof(buffer), 0);
+
+            buffer[0] = '\0';
+            memcpy(buffer, Me->content, sizeof(Me->content));
+            send(sock, buffer, sizeof(buffer), 0);
+
+        } else {
+
+            buffer[0] = '\0';
+            memcpy(buffer, Me->content, sizeof(Me->command));
+            send(sock, buffer, sizeof(buffer), 0);
+
+        }
 
     }
-        
-
-    close(sock);
 
     return 0;
 
