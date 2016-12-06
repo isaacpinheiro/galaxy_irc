@@ -85,6 +85,10 @@ int main(int argc, char **argv)
             buffer[0] = '\0';
             memcpy(buffer, Me->user_name, sizeof(Me->user_name));
             send(sock, buffer, sizeof(buffer), 0);
+            pthread_cancel(server_thread);
+            close(sock);
+            printf("Disconnected.\n");
+            exit(EXIT_SUCCESS);
 
         } else if (strcmp(Me->command, "/kill") == 0) {
 
