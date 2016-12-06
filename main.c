@@ -111,12 +111,14 @@ int main(int argc, char **argv)
             send(sock, buffer, sizeof(buffer), 0);
 
             Me->user_name[0] = '\0';
-            memcpy(Me->user_name, Me->content, sizeof(Me->content));
+            strcat(Me->user_name, buffer);
 
         } else {
 
             buffer[0] = '\0';
-            memcpy(buffer, Me->content, sizeof(Me->command));
+            strcat(buffer, Me->user_name);
+            strcat(buffer, ": ");
+            strcat(buffer, Me->content);
             send(sock, buffer, sizeof(buffer), 0);
 
         }

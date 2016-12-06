@@ -13,19 +13,31 @@ void xxx(char *buffer, Message *Me)
 
     if (buffer[0] == '/') {
 
-        while (buffer[j] != ' ') {
-            Me->command[i] = buffer[j];
-            i++;
-            j++;
-        }
+        if (strcmp(buffer, "/list") == 0 || strcmp(buffer, "/quit") == 0) {
 
-        i=0;
-        j++;
+            strcat(Me->command, buffer);
 
-        while (buffer[j] != '\0') {
-            Me->content[i] = buffer[j];
-            i++;
+        } else {
+
+            while (buffer[j] != ' ') {
+                Me->command[i] = buffer[j];
+                i++;
+                j++;
+            }
+
+            Me->command[i] = '\0';
+
+            i=0;
             j++;
+
+            while (buffer[j] != '\0') {
+                Me->content[i] = buffer[j];
+                i++;
+                j++;
+            }
+
+            Me->content[i] = '\0';
+
         }
 
     } else {
