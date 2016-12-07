@@ -5,7 +5,7 @@
 
 #include "client_cmd.h"
 
-void xxx(char *buffer, Message *Me)
+void parse(char *buffer, Message *Me)
 {
 
     int i = 0;

@@ -47,7 +47,7 @@ int main(int argc, char **argv)
     Me->content[0] = '\0';
 
     printf("Galaxy IRC\n\n");
-    printf("Escolha um nick: ");
+    printf("Write your nick: ");
 
     buffer[0] = '\0';
     memcpy(buffer, "/new_user", sizeof(buffer));
@@ -68,7 +68,7 @@ int main(int argc, char **argv)
         Me->content[0] = '\0';
         fgets(buffer, 512, stdin);
         strip(buffer);
-        xxx(buffer, Me);
+        parse(buffer, Me);
 
         if (strcmp(Me->command, "/list") == 0) {
 
