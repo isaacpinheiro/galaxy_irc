@@ -61,7 +61,7 @@ void *server_handler(void *server_sock)
 
     while ((read_size = recv(sock, buffer, sizeof(buffer), 0)) > 0) {
         printf("%s\n\n", buffer);
-        buffer[0] = '\0';
+        bzero(buffer, 1024);
     }
 
 }
