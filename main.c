@@ -17,6 +17,7 @@ int main(int argc, char **argv)
     unsigned short server_port = 9000;
     char server_ip[16];
     char buffer[BUFFER_SIZE];
+    server_ip[0] = '\0';
     strcat(server_ip, argv[1]);
     Message *Me = (Message*) malloc(sizeof(Message));
 
