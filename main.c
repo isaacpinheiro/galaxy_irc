@@ -17,9 +17,8 @@ int main(int argc, char **argv)
     unsigned short server_port = 9000;
     char server_ip[16];
     char buffer[BUFFER_SIZE];
-    server_ip[0] = '\0';
-    strcat(server_ip, argv[1]);
-    Message *Me = (Message*) malloc(sizeof(Message));
+    strcpy(server_ip, argv[1]);
+    Message m;
 
     if ((sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
         perror("socket() failed!");
@@ -43,21 +42,16 @@ int main(int argc, char **argv)
 
     pthread_create(&server_thread, NULL, server_handler, (void*) new_server_sock);
 
-    Me->user_name[0] = '\0';
-    Me->command[0] = '\0';
-    Me->content[0] = '\0';
-
     printf("Galaxy IRC\n\n");
     printf("Write your nick: ");
 
-    buffer[0] = '\0';
-    memcpy(buffer, "/new_user", sizeof(buffer));
-    send(sock, buffer, sizeof(buffer), 0);
-
-    buffer[0] = '\0';
+    strcpy(m.command, "/new_user");
     fgets(buffer, 256, stdin);
     strip(buffer);
-    memcpy(Me->user_name, buffer, sizeof(buffer));
+    strcpy(m.user_name, buffer);
+    strcpy(m.content, buffer);
+
+    memcpy((void*)buffer, (void*)&m, sizeof(Message));
     send(sock, buffer, sizeof(buffer), 0);
 
     printf("\n");
@@ -65,65 +59,46 @@ int main(int argc, char **argv)
     while (1) {
 
         buffer[0] = '\0';
-        Me->command[0] = '\0';
-        Me->content[0] = '\0';
+        m.command[0] = '\0';
+        m.content[0] = '\0';
         fgets(buffer, 512, stdin);
         strip(buffer);
-        parse(buffer, Me);
+        parse(buffer, &m);
 
-        if (strcmp(Me->command, "/list") == 0) {
+        if (strcmp(m.command, "/list") == 0) {
 
             buffer[0] = '\0';
-            memcpy(buffer, Me->command, sizeof(Me->command));
+            memcpy((void*)buffer, (void*)&m, sizeof(Message));
             send(sock, buffer, sizeof(buffer), 0);
 
-        } else if (strcmp(Me->command, "/quit") == 0) {
+        } else if (strcmp(m.command, "/quit") == 0) {
 
             buffer[0] = '\0';
-            memcpy(buffer, Me->command, sizeof(Me->command));
-            send(sock, buffer, sizeof(buffer), 0);
-
-            buffer[0] = '\0';
-            memcpy(buffer, Me->user_name, sizeof(Me->user_name));
+            strcpy(m.content, m.user_name);
+            memcpy((void*)buffer, (void*)&m, sizeof(Message));
             send(sock, buffer, sizeof(buffer), 0);
             pthread_cancel(server_thread);
             close(sock);
             printf("Disconnected.\n");
             exit(EXIT_SUCCESS);
 
-        } else if (strcmp(Me->command, "/kill") == 0) {
+        } else if (strcmp(m.command, "/kill") == 0) {
 
             buffer[0] = '\0';
-            memcpy(buffer, Me->command, sizeof(Me->command));
+            memcpy((void*)buffer, (void*)&m, sizeof(Message));
             send(sock, buffer, sizeof(buffer), 0);
+
+        } else if (strcmp(m.command, "/nick") == 0) {
 
             buffer[0] = '\0';
-            memcpy(buffer, Me->content, sizeof(Me->content));
+            memcpy((void*)buffer, (void*)&m, sizeof(Message));
             send(sock, buffer, sizeof(buffer), 0);
-
-        } else if (strcmp(Me->command, "/nick") == 0) {
-
-            buffer[0] = '\0';
-            memcpy(buffer, Me->command, sizeof(Me->command));
-            send(sock, buffer, sizeof(buffer), 0);
-
-            buffer[0] = '\0';
-            memcpy(buffer, Me->user_name, sizeof(Me->user_name));
-            send(sock, buffer, sizeof(buffer), 0);
-
-            buffer[0] = '\0';
-            memcpy(buffer, Me->content, sizeof(Me->content));
-            send(sock, buffer, sizeof(buffer), 0);
-
-            Me->user_name[0] = '\0';
-            strcat(Me->user_name, buffer);
+            strcpy(m.user_name, m.content);
 
         } else {
 
             buffer[0] = '\0';
-            strcat(buffer, Me->user_name);
-            strcat(buffer, ": ");
-            strcat(buffer, Me->content);
+            memcpy((void*)buffer, (void*)&m, sizeof(Message));
             send(sock, buffer, sizeof(buffer), 0);
 
         }
